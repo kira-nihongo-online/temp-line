@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEMP-LINE</title>
+
+<style>
+/* ========================================
+   TEMP-LINE
+   Template Message Manager
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, "Noto Sans JP", sans-serif;
+    background: #f4f6f9;
+    color: #333;
+}
+
+/* HEADER */
+
+header {
+    height: 70px;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #263746;
+    color: white;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.version {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* MAIN */
+
+main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    margin: 0 0 8px;
+    font-size: 23px;
+}
+
+.welcome p {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+/* CONTENT */
+
+.container {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 20px;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 400px;
+}
+
+.sidebar h3 {
+    margin: 0 0 15px;
+    font-size: 15px;
+}
+
+.menu-item {
+    padding: 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.menu-item.active {
+    background: #e8eef5;
+    color: #263746;
+    font-weight: bold;
+}
+
+/* WORK AREA */
+
+.workspace {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    min-height: 400px;
+}
+
+.workspace h3 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.placeholder {
+    padding: 60px 20px;
+    text-align: center;
+    color: #999;
+    border: 1px dashed #ddd;
+    border-radius: 6px;
+}
+
+/* FOOTER */
+
+footer {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">TEMP-LINE</div>
+    <div class="version">VERSION 0.1.0</div>
+</header>
+
+<main>
+
+    <section class="welcome">
+        <h2>定型文管理システム</h2>
+        <p>Template Message Manager</p>
+    </section>
+
+    <div class="container">
+
+        <aside class="sidebar">
+            <h3>MENU</h3>
+
+            <div class="menu-item active">ホーム</div>
+            <div class="menu-item">定型文一覧</div>
+            <div class="menu-item">新規登録</div>
+            <div class="menu-item">カテゴリー管理</div>
+            <div class="menu-item">バックアップ</div>
+            <div class="menu-item">設定</div>
+        </aside>
+
+        <section class="workspace">
+            <h3>Welcome to TEMP-LINE</h3>
+
+            <div class="placeholder">
+                <p>定型文管理アプリ</p>
+                <p>ここから管理機能を追加していきます。</p>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+
+<footer>
+    TEMP-LINE © 2026
+</footer>
+
+<script>
+/************************************************
+ * TEMP-LINE
+ * Template Message Manager
+ * Version 0.1.0
+ ************************************************/
+
+"use strict";
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("TEMP-LINE started.");
+});
+
+</script>
+
+</body>
+</html>
