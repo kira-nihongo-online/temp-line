@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -658,7 +657,7 @@ function showList() {
 
     }
 
-    templates.forEach(template => {
+    templates.forEach((template, index) => {
 
         const card = document.createElement("div");
 
@@ -711,6 +710,29 @@ function showList() {
         const deleteButton = document.createElement("button");
         deleteButton.className = "template-action-button";
         deleteButton.textContent = "削除";
+        
+        // 削除ボタンの処理
+        deleteButton.addEventListener("click", () => {
+            const confirmed = confirm("この定型文を削除しますか？");
+
+            if (!confirmed) {
+                return;
+            }
+
+            // 登録データを取得
+            const templates = getTemplates();
+
+            // 選択した定型文だけを削除
+            const updatedTemplates = templates.filter(
+                item => item.id !== template.id
+            );
+
+            // 既存の保存関数で保存
+            saveTemplates(updatedTemplates);
+
+            // 一覧を再表示
+            showList();
+        });
 
         actions.append(copyButton, editButton, deleteButton);
 
