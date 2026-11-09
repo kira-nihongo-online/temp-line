@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -98,6 +99,10 @@ main {
     font-size: 14px;
 }
 
+.menu-item:hover {
+    background: #f0f3f7;
+}
+
 .menu-item.active {
     background: #e8eef5;
     color: #263746;
@@ -126,6 +131,96 @@ main {
     border-radius: 6px;
 }
 
+/* PAGE TITLE */
+
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+}
+
+.page-title img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+/* REGISTER FORM */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd3dc;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    background: white;
+}
+
+.form-group textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #507fa8;
+    box-shadow: 0 0 0 2px rgba(80,127,168,0.12);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.form-button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.save-button {
+    background: #263746;
+    color: white;
+}
+
+.save-button:hover {
+    background: #3b5266;
+}
+
+.cancel-button {
+    background: #e9edf1;
+    color: #444;
+}
+
+.cancel-button:hover {
+    background: #dce2e8;
+}
+
+.form-note {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #888;
+}
+
 /* FOOTER */
 
 footer {
@@ -145,21 +240,11 @@ footer {
     main {
         padding: 15px;
     }
-}
 
-.page-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 22px;
+    .form-actions {
+        flex-wrap: wrap;
+    }
 }
-
-.page-title img {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-}
-
 </style>
 </head>
 
@@ -182,24 +267,47 @@ footer {
 
     <div class="container">
 
+        <!-- SIDEBAR -->
+
         <aside class="sidebar">
             <h3>MENU</h3>
 
-            <div class="menu-item active">ホーム</div>
-            <div class="menu-item">定型文一覧</div>
-            <div class="menu-item">新規登録</div>
-            <div class="menu-item">カテゴリー管理</div>
-            <div class="menu-item">バックアップ</div>
-            <div class="menu-item">設定</div>
+            <div class="menu-item active" data-page="home">
+                ホーム
+            </div>
+
+            <div class="menu-item" data-page="list">
+                定型文一覧
+            </div>
+
+            <div class="menu-item" data-page="register">
+                新規登録
+            </div>
+
+            <div class="menu-item" data-page="category">
+                カテゴリー管理
+            </div>
+
+            <div class="menu-item" data-page="backup">
+                バックアップ
+            </div>
+
+            <div class="menu-item" data-page="settings">
+                設定
+            </div>
         </aside>
 
-        <section class="workspace">
+        <!-- WORK AREA -->
+
+        <section class="workspace" id="workspace">
+
             <h3>Welcome to TEMP-LINE</h3>
 
             <div class="placeholder">
                 <p>定型文管理アプリ</p>
                 <p>ここから管理機能を追加していきます。</p>
             </div>
+
         </section>
 
     </div>
@@ -211,6 +319,7 @@ footer {
 </footer>
 
 <script>
+
 /************************************************
  * TEMP-LINE
  * Template Message Manager
@@ -219,8 +328,158 @@ footer {
 
 "use strict";
 
+const workspace = document.getElementById("workspace");
+const menuItems = document.querySelectorAll(".menu-item");
+
+// ホーム画面
+
+function showHome() {
+
+    workspace.innerHTML = `
+        <h3>Welcome to TEMP-LINE</h3>
+
+        <div class="placeholder">
+            <p>定型文管理アプリ</p>
+            <p>ここから管理機能を追加していきます。</p>
+        </div>
+    `;
+
+}
+
+// 新規登録画面
+
+function showRegister() {
+
+    workspace.innerHTML = `
+        <h3>新規定型文登録</h3>
+
+        <form id="registerForm">
+
+            <div class="form-group">
+                <label for="category">カテゴリー</label>
+                <input
+                    type="text"
+                    id="category"
+                    placeholder="カテゴリーを入力してください"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="title">タイトル</label>
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="定型文のタイトルを入力してください"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="japanese">日本語</label>
+                <textarea
+                    id="japanese"
+                    placeholder="日本語の文章を入力してください"
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="thai">タイ語</label>
+                <textarea
+                    id="thai"
+                    placeholder="タイ語の文章を入力してください"
+                ></textarea>
+            </div>
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="form-button save-button"
+                >
+                    保存
+                </button>
+
+                <button
+                    type="button"
+                    class="form-button cancel-button"
+                    id="cancelButton"
+                >
+                    キャンセル
+                </button>
+
+            </div>
+
+            <p class="form-note">
+                ※ 保存機能は次の開発段階で実装します。
+            </p>
+
+        </form>
+    `;
+
+    // 保存ボタン（次の段階で保存処理を実装）
+
+    document.getElementById("registerForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            alert("現在は登録画面の試作段階です。保存機能は次の段階で実装します。");
+
+        });
+
+    // キャンセル
+
+    document.getElementById("cancelButton")
+        .addEventListener("click", () => {
+
+            showPage("home");
+
+        });
+
+}
+
+// ページ切り替え
+
+function showPage(page) {
+
+    menuItems.forEach(item => {
+
+        item.classList.toggle(
+            "active",
+            item.dataset.page === page
+        );
+
+    });
+
+    if (page === "home") {
+        showHome();
+    }
+
+    if (page === "register") {
+        showRegister();
+    }
+
+}
+
+// メニュー操作
+
+menuItems.forEach(item => {
+
+    item.addEventListener("click", () => {
+
+        showPage(item.dataset.page);
+
+    });
+
+});
+
+// 初期表示
+
 document.addEventListener("DOMContentLoaded", () => {
+
     console.log("TEMP-LINE started.");
+
 });
 
 </script>
