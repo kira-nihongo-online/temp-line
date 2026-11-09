@@ -591,22 +591,58 @@ function showRegister(template = null) {
             document.getElementById("registerForm")
                 .addEventListener("submit", function(event) {
 
-            event.preventDefault();
+            // 保存処理
 
-            const template = {
+            document.getElementById("registerForm")
+                .addEventListener("submit", function(event) {
 
-                id: crypto.randomUUID(),
+                    event.preventDefault();
 
-                category: document.getElementById("category").value.trim(),
+                    const updatedTemplate = {
 
-                title: document.getElementById("title").value.trim(),
+                        id: template ? template.id : crypto.randomUUID(),
 
-                japanese: document.getElementById("japanese").value,
+                        category: document.getElementById("category").value.trim(),
 
-                thai: document.getElementById("thai").value,
+                        title: document.getElementById("title").value.trim(),
 
-                createdAt: new Date().toISOString()
+                        japanese: document.getElementById("japanese").value,
 
+                        thai: document.getElementById("thai").value,
+
+                        createdAt: template ? template.createdAt : new Date().toISOString()
+
+                    };
+
+                    if (!updatedTemplate.category || !updatedTemplate.title) {
+                        return;
+                    }
+
+                    const templates = getTemplates();
+
+                    if (template) {
+
+                        // 編集：元の定型文を更新
+                        const index = templates.findIndex(
+                            item => item.id === template.id
+                        );
+
+                        if (index === -1) {
+                            document.getElementById("formStatus")
+                                .textContent = "編集対象が見つかりません。";
+                            return;
+                        }
+
+                        templates[index] = updatedTemplate;
+
+                    } else {
+
+                        // 新規登録：新しい定型文を追加
+                        templates.push(updatedTemplate);
+
+                    }
+
+                    const saved = saveTemplates(templates);
             };
 
             if (!template.category || !template.title) {
