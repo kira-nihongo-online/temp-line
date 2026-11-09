@@ -499,7 +499,7 @@ function showHome() {
 }
 
 /************************************************
- * 新規登録画面
+ * 新規登録・編集画面
  ************************************************/
 
 function showRegister(template = null) {
@@ -564,100 +564,83 @@ function showRegister(template = null) {
 
             </div>
 
-                    <p id="formStatus" class="form-status"></p>
+            <p id="formStatus" class="form-status"></p>
 
-                </form>
-            `;
+        </form>
+    `;
 
-            // 編集対象の内容をフォームに表示
-            if (template) {
+    // 編集対象の内容をフォームに表示
+    if (template) {
 
-                document.getElementById("category").value =
-                    template.category;
+        document.getElementById("category").value =
+            template.category;
 
-                document.getElementById("title").value =
-                    template.title;
+        document.getElementById("title").value =
+            template.title;
 
-                document.getElementById("japanese").value =
-                    template.japanese || "";
+        document.getElementById("japanese").value =
+            template.japanese || "";
 
-                document.getElementById("thai").value =
-                    template.thai || "";
+        document.getElementById("thai").value =
+            template.thai || "";
 
-            }
+    }
 
-            // 保存処理
+    // 保存処理
+    document.getElementById("registerForm")
+        .addEventListener("submit", function(event) {
 
-            document.getElementById("registerForm")
-                .addEventListener("submit", function(event) {
+            event.preventDefault();
 
-            // 保存処理
+            const updatedTemplate = {
 
-            document.getElementById("registerForm")
-                .addEventListener("submit", function(event) {
+                id: template ? template.id : crypto.randomUUID(),
 
-                    event.preventDefault();
+                category: document.getElementById("category").value.trim(),
 
-                    const updatedTemplate = {
+                title: document.getElementById("title").value.trim(),
 
-                        id: template ? template.id : crypto.randomUUID(),
+                japanese: document.getElementById("japanese").value,
 
-                        category: document.getElementById("category").value.trim(),
+                thai: document.getElementById("thai").value,
 
-                        title: document.getElementById("title").value.trim(),
+                createdAt: template
+                    ? template.createdAt
+                    : new Date().toISOString()
 
-                        japanese: document.getElementById("japanese").value,
-
-                        thai: document.getElementById("thai").value,
-
-                        createdAt: template ? template.createdAt : new Date().toISOString()
-
-                    };
-
-                    if (!updatedTemplate.category || !updatedTemplate.title) {
-                        return;
-                    }
-
-                    const templates = getTemplates();
-
-                    if (template) {
-
-                        // 編集：元の定型文を更新
-                        const index = templates.findIndex(
-                            item => item.id === template.id
-                        );
-
-                        if (index === -1) {
-                            document.getElementById("formStatus")
-                                .textContent = "編集対象が見つかりません。";
-                            return;
-                        }
-
-                        templates[index] = updatedTemplate;
-
-                    } else {
-
-                        // 新規登録：新しい定型文を追加
-                        templates.push(updatedTemplate);
-
-                    }
-
-                    const saved = saveTemplates(templates);
             };
 
-            if (!template.category || !template.title) {
+            if (!updatedTemplate.category || !updatedTemplate.title) {
                 return;
             }
 
             const templates = getTemplates();
 
-            templates.push(template);
+            if (template) {
+
+                // 編集：元の定型文を更新
+                const index = templates.findIndex(
+                    item => item.id === template.id
+                );
+
+                if (index === -1) {
+                    document.getElementById("formStatus")
+                        .textContent = "編集対象が見つかりません。";
+                    return;
+                }
+
+                templates[index] = updatedTemplate;
+
+            } else {
+
+                // 新規登録：新しい定型文を追加
+                templates.push(updatedTemplate);
+
+            }
 
             const saved = saveTemplates(templates);
 
             if (saved) {
-
-                // 保存した文章を一覧画面に表示
 
                 showPage("list");
 
@@ -671,7 +654,6 @@ function showRegister(template = null) {
         });
 
     // キャンセル
-
     document.getElementById("cancelButton")
         .addEventListener("click", () => {
 
@@ -756,6 +738,11 @@ function showList() {
         editButton.className = "template-action-button";
         editButton.textContent = "編集";
 
+        // 編集ボタンの処理
+        editButton.addEventListener("click", () => {
+            showPage("register", template);
+        });
+
         const deleteButton = document.createElement("button");
         deleteButton.className = "template-action-button";
         deleteButton.textContent = "削除";
@@ -805,7 +792,7 @@ function showList() {
  * ページ切り替え
  ************************************************/
 
-function showPage(page) {
+function showPage(page, template = null) {
 
     menuItems.forEach(item => {
 
@@ -822,9 +809,10 @@ function showPage(page) {
 
     } else if (page === "register") {
 
-        showRegister();
+        showRegister(template);
 
-    } else if (page === "list") {
+    
+    }else if (page === "list") {
 
         showList();
 
