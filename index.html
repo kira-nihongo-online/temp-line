@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -215,16 +214,77 @@ main {
     background: #dce2e8;
 }
 
-.form-note {
-    margin-top: 15px;
-    font-size: 12px;
-    color: #888;
-}
-
 .form-status {
     margin-top: 15px;
     font-size: 13px;
     color: #27865c;
+}
+
+/* DASHBOARD */
+
+.dashboard-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 25px;
+    border: 1px solid #e0e4e8;
+    border-radius: 7px;
+    margin-bottom: 20px;
+}
+
+.count-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #263746;
+}
+
+/* TEMPLATE LIST */
+
+.template-card {
+    border: 1px solid #e0e4e8;
+    border-radius: 7px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.template-card h4 {
+    margin: 0 0 10px;
+    font-size: 17px;
+}
+
+.template-category {
+    display: inline-block;
+    background: #eaf0f6;
+    color: #38546c;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.template-language {
+    font-size: 13px;
+    font-weight: bold;
+    color: #596b7c;
+    margin: 12px 0 5px;
+}
+
+.template-message {
+    padding: 12px;
+    background: #f7f8fa;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: #999;
+    border: 1px dashed #ddd;
+    border-radius: 6px;
 }
 
 /* FOOTER */
@@ -306,14 +366,6 @@ footer {
         <!-- WORK AREA -->
 
         <section class="workspace" id="workspace">
-
-            <h3>Welcome to TEMP-LINE</h3>
-
-            <div class="placeholder">
-                <p>定型文管理アプリ</p>
-                <p>ここから管理機能を追加していきます。</p>
-            </div>
-
         </section>
 
     </div>
@@ -349,7 +401,11 @@ function getTemplates() {
 
         const data = localStorage.getItem(STORAGE_KEY);
 
-        return data ? JSON.parse(data) : [];
+        if (!data) return [];
+
+        const templates = JSON.parse(data);
+
+        return Array.isArray(templates) ? templates : [];
 
     } catch (error) {
 
@@ -392,12 +448,26 @@ function saveTemplates(templates) {
 
 function showHome() {
 
+    const templates = getTemplates();
+
     workspace.innerHTML = `
         <h3>Welcome to TEMP-LINE</h3>
 
+        <div class="dashboard-count">
+            <div>
+                <div style="font-size:13px;color:#777;">
+                    登録済み定型文
+                </div>
+                <div class="count-number">
+                    ${templates.length}
+                    <span style="font-size:14px;">件</span>
+                </div>
+            </div>
+        </div>
+
         <div class="placeholder">
             <p>定型文管理アプリ</p>
-            <p>ここから管理機能を追加していきます。</p>
+            <p>登録済みの定型文を管理できます。</p>
         </div>
     `;
 
@@ -509,10 +579,9 @@ function showRegister() {
 
             if (saved) {
 
-                document.getElementById("formStatus")
-                    .textContent = "保存しました！";
+                // 保存した文章を一覧画面に表示
 
-                this.reset();
+                showPage("list");
 
             } else {
 
@@ -535,6 +604,79 @@ function showRegister() {
 }
 
 /************************************************
+ * 定型文一覧
+ ************************************************/
+
+function showList() {
+
+    const templates = getTemplates();
+
+    workspace.innerHTML = `
+        <h3>定型文一覧</h3>
+
+        <div id="templateList"></div>
+    `;
+
+    const list = document.getElementById("templateList");
+
+    if (templates.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty">
+                <p>登録された定型文はありません。</p>
+                <p>「新規登録」から定型文を登録してください。</p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+    templates.forEach(template => {
+
+        const card = document.createElement("div");
+
+        card.className = "template-card";
+
+        const title = document.createElement("h4");
+        title.textContent = template.title;
+
+        const category = document.createElement("span");
+        category.className = "template-category";
+        category.textContent = template.category;
+
+        const jpLabel = document.createElement("div");
+        jpLabel.className = "template-language";
+        jpLabel.textContent = "日本語";
+
+        const jpMessage = document.createElement("div");
+        jpMessage.className = "template-message";
+        jpMessage.textContent = template.japanese || "（未入力）";
+
+        const thLabel = document.createElement("div");
+        thLabel.className = "template-language";
+        thLabel.textContent = "タイ語";
+
+        const thMessage = document.createElement("div");
+        thMessage.className = "template-message";
+        thMessage.textContent = template.thai || "（未入力）";
+
+        card.append(
+            title,
+            category,
+            jpLabel,
+            jpMessage,
+            thLabel,
+            thMessage
+        );
+
+        list.appendChild(card);
+
+    });
+
+}
+
+/************************************************
  * ページ切り替え
  ************************************************/
 
@@ -553,11 +695,13 @@ function showPage(page) {
 
         showHome();
 
-    }
-
-    if (page === "register") {
+    } else if (page === "register") {
 
         showRegister();
+
+    } else if (page === "list") {
+
+        showList();
 
     }
 
@@ -582,6 +726,8 @@ menuItems.forEach(item => {
  ************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    showPage("home");
 
     console.log("TEMP-LINE started.");
 
