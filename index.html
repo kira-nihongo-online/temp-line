@@ -564,19 +564,32 @@ function showRegister(template = null) {
 
             </div>
 
-            <p id="formStatus" class="form-status"></p>
+                    <p id="formStatus" class="form-status"></p>
 
-        </form>
-    `;
+                </form>
+            `;
 
-    function showRegister(template = null) {
+            // 編集対象の内容をフォームに表示
+            if (template) {
 
-        workspace.innerHTML = `
+                document.getElementById("category").value =
+                    template.category;
 
-    // 保存処理
+                document.getElementById("title").value =
+                    template.title;
 
-    document.getElementById("registerForm")
-        .addEventListener("submit", function(event) {
+                document.getElementById("japanese").value =
+                    template.japanese || "";
+
+                document.getElementById("thai").value =
+                    template.thai || "";
+
+            }
+
+            // 保存処理
+
+            document.getElementById("registerForm")
+                .addEventListener("submit", function(event) {
 
             event.preventDefault();
 
