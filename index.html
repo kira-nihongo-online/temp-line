@@ -502,10 +502,10 @@ function showHome() {
  * 新規登録画面
  ************************************************/
 
-function showRegister() {
+function showRegister(template = null) {
 
     workspace.innerHTML = `
-        <h3>新規定型文登録</h3>
+        <h3>${template ? "定型文編集" : "新規定型文登録"}</h3>
 
         <form id="registerForm">
 
@@ -568,6 +568,10 @@ function showRegister() {
 
         </form>
     `;
+
+    function showRegister(template = null) {
+
+        workspace.innerHTML = `
 
     // 保存処理
 
