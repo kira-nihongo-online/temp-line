@@ -221,6 +221,12 @@ main {
     color: #888;
 }
 
+.form-status {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #27865c;
+}
+
 /* FOOTER */
 
 footer {
@@ -331,7 +337,58 @@ footer {
 const workspace = document.getElementById("workspace");
 const menuItems = document.querySelectorAll(".menu-item");
 
-// ホーム画面
+const STORAGE_KEY = "TEMP_LINE_TEMPLATES";
+
+/************************************************
+ * データ取得
+ ************************************************/
+
+function getTemplates() {
+
+    try {
+
+        const data = localStorage.getItem(STORAGE_KEY);
+
+        return data ? JSON.parse(data) : [];
+
+    } catch (error) {
+
+        console.error("データ取得エラー:", error);
+
+        return [];
+
+    }
+
+}
+
+/************************************************
+ * データ保存
+ ************************************************/
+
+function saveTemplates(templates) {
+
+    try {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(templates)
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error("保存エラー:", error);
+
+        return false;
+
+    }
+
+}
+
+/************************************************
+ * ホーム画面
+ ************************************************/
 
 function showHome() {
 
@@ -346,7 +403,9 @@ function showHome() {
 
 }
 
-// 新規登録画面
+/************************************************
+ * 新規登録画面
+ ************************************************/
 
 function showRegister() {
 
@@ -410,21 +469,57 @@ function showRegister() {
 
             </div>
 
-            <p class="form-note">
-                ※ 保存機能は次の開発段階で実装します。
-            </p>
+            <p id="formStatus" class="form-status"></p>
 
         </form>
     `;
 
-    // 保存ボタン（次の段階で保存処理を実装）
+    // 保存処理
 
     document.getElementById("registerForm")
         .addEventListener("submit", function(event) {
 
             event.preventDefault();
 
-            alert("現在は登録画面の試作段階です。保存機能は次の段階で実装します。");
+            const template = {
+
+                id: crypto.randomUUID(),
+
+                category: document.getElementById("category").value.trim(),
+
+                title: document.getElementById("title").value.trim(),
+
+                japanese: document.getElementById("japanese").value,
+
+                thai: document.getElementById("thai").value,
+
+                createdAt: new Date().toISOString()
+
+            };
+
+            if (!template.category || !template.title) {
+                return;
+            }
+
+            const templates = getTemplates();
+
+            templates.push(template);
+
+            const saved = saveTemplates(templates);
+
+            if (saved) {
+
+                document.getElementById("formStatus")
+                    .textContent = "保存しました！";
+
+                this.reset();
+
+            } else {
+
+                document.getElementById("formStatus")
+                    .textContent = "保存できませんでした。";
+
+            }
 
         });
 
@@ -439,7 +534,9 @@ function showRegister() {
 
 }
 
-// ページ切り替え
+/************************************************
+ * ページ切り替え
+ ************************************************/
 
 function showPage(page) {
 
@@ -453,16 +550,22 @@ function showPage(page) {
     });
 
     if (page === "home") {
+
         showHome();
+
     }
 
     if (page === "register") {
+
         showRegister();
+
     }
 
 }
 
-// メニュー操作
+/************************************************
+ * メニュー操作
+ ************************************************/
 
 menuItems.forEach(item => {
 
@@ -474,7 +577,9 @@ menuItems.forEach(item => {
 
 });
 
-// 初期表示
+/************************************************
+ * 初期表示
+ ************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
 
