@@ -362,10 +362,7 @@ footer {
 
         <aside class="sidebar">
             <h3>MENU</h3>
-
-            <div class="menu-item active" data-page="home">
-                ホーム
-            </div>
+        
 
             <div class="menu-item" data-page="list">
                 定型文一覧
@@ -657,7 +654,7 @@ function showRegister(template = null) {
     document.getElementById("cancelButton")
         .addEventListener("click", () => {
 
-            showPage("home");
+            showPage("list");
 
         });
 
@@ -803,23 +800,18 @@ function showPage(page, template = null) {
 
     });
 
-    if (page === "home") {
-
-        showHome();
-
-    } else if (page === "register") {
+    if (page === "register") {
 
         showRegister(template);
 
-    
-    }else if (page === "list") {
+    } else if (page === "list") {
 
         showList();
 
     }
 
 }
-
+   
 /************************************************
  * メニュー操作
  ************************************************/
@@ -840,7 +832,7 @@ menuItems.forEach(item => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    showPage("home");
+    showPage("list");
 
     console.log("TEMP-LINE started.");
 
