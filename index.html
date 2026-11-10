@@ -423,6 +423,7 @@ const workspace = document.getElementById("workspace");
 const menuItems = document.querySelectorAll(".menu-item");
 
 const STORAGE_KEY = "TEMP_LINE_TEMPLATES";
+const CATEGORY_STORAGE_KEY = "TEMP_LINE_CATEGORIES";
 
 /************************************************
  * データ取得
@@ -474,6 +475,151 @@ function saveTemplates(templates) {
     }
 
 }
+
+/************************************************
+ * カテゴリーデータ取得
+ ************************************************/
+
+function getCategories() {
+
+    try {
+
+        const data = localStorage.getItem(CATEGORY_STORAGE_KEY);
+
+        if (!data) return [];
+
+        const categories = JSON.parse(data);
+
+        return Array.isArray(categories) ? categories : [];
+
+    } catch (error) {
+
+        console.error("カテゴリー取得エラー:", error);
+
+        return [];
+
+    }
+
+}
+
+
+/************************************************
+ * カテゴリーデータ保存
+ ************************************************/
+
+function saveCategories(categories) {
+
+    try {
+
+        localStorage.setItem(
+            CATEGORY_STORAGE_KEY,
+            JSON.stringify(categories)
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error("カテゴリー保存エラー:", error);
+
+        return false;
+
+    }
+
+/************************************************
+ * カテゴリー管理画面
+ ************************************************/
+
+function showCategory() {
+
+    const categories = getCategories();
+
+    workspace.innerHTML = `
+        <h3>カテゴリー管理</h3>
+
+        <div class="form-group">
+            <label for="newCategory">カテゴリー名</label>
+            <input
+                type="text"
+                id="newCategory"
+                placeholder="新しいカテゴリーを入力してください"
+            >
+        </div>
+
+        <div class="form-actions">
+            <button
+                type="button"
+                class="form-button save-button"
+                id="addCategoryButton"
+            >
+                登録
+            </button>
+        </div>
+
+        <p id="categoryStatus" class="form-status"></p>
+
+        <h3>カテゴリー一覧</h3>
+
+        <div id="categoryList"></div>
+    `;
+
+    const categoryList = document.getElementById("categoryList");
+
+    if (categories.length === 0) {
+
+        categoryList.innerHTML = `
+            <div class="empty">
+                登録されたカテゴリーはありません。
+            </div>
+        `;
+
+    } else {
+
+        categories.forEach(category => {
+
+            const item = document.createElement("div");
+            item.className = "template-card";
+            item.textContent = category;
+
+            categoryList.appendChild(item);
+
+        });
+
+    }
+
+    document.getElementById("addCategoryButton")
+        .addEventListener("click", () => {
+
+            const input = document.getElementById("newCategory");
+            const name = input.value.trim();
+
+            const status = document.getElementById("categoryStatus");
+
+            if (!name) {
+                status.textContent = "カテゴリー名を入力してください。";
+                return;
+            }
+
+            const currentCategories = getCategories();
+
+            if (currentCategories.includes(name)) {
+                status.textContent = "このカテゴリーは登録済みです。";
+                return;
+            }
+
+            currentCategories.push(name);
+
+            if (saveCategories(currentCategories)) {
+                showCategory();
+            } else {
+                status.textContent = "保存できませんでした。";
+            }
+
+        });
+
+}
+
+
 
 /************************************************
  * ホーム画面
