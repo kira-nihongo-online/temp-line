@@ -984,7 +984,6 @@ function showList() {
 /************************************************
  * ページ切り替え
  ************************************************/
-
 function showPage(page, template = null) {
 
     menuItems.forEach(item => {
@@ -1004,9 +1003,14 @@ function showPage(page, template = null) {
 
         showList();
 
+    } else if (page === "category") {
+
+        showCategory();
+
     }
 
 }
+
    
 /************************************************
  * メニュー操作
