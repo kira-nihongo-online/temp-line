@@ -373,7 +373,7 @@ footer {
 
         <aside class="sidebar">
             <h3>MENU</h3>
-        
+
 
             <div class="menu-item" data-page="list">
                 定型文一覧
@@ -472,6 +472,44 @@ function saveTemplates(templates) {
         return false;
 
     }
+
+}
+
+/************************************************
+ * カテゴリー管理画面
+ ************************************************/
+
+function showCategory() {
+
+    workspace.innerHTML = `
+        <h3>カテゴリー管理</h3>
+
+        <div class="form-group">
+            <label for="newCategory">カテゴリー名</label>
+            <input
+                type="text"
+                id="newCategory"
+                placeholder="新しいカテゴリーを入力してください"
+            >
+        </div>
+
+        <div class="form-actions">
+            <button
+                type="button"
+                class="form-button save-button"
+            >
+                登録
+            </button>
+        </div>
+
+        <h3>カテゴリー一覧</h3>
+
+        <div id="categoryList">
+            <div class="empty">
+                カテゴリーはまだ登録されていません。
+            </div>
+        </div>
+    `;
 
 }
 
@@ -754,7 +792,7 @@ function showList() {
         const deleteButton = document.createElement("button");
         deleteButton.className = "template-action-button";
         deleteButton.textContent = "削除";
-        
+
         // 削除ボタンの処理
         deleteButton.addEventListener("click", () => {
             const confirmed = confirm("この定型文を削除しますか？");
@@ -778,7 +816,7 @@ function showList() {
             showList();
         });
 
-        
+
         const jpCopyButton = document.createElement("button");
         jpCopyButton.className = "template-action-button copy-button";
         jpCopyButton.textContent = "日本語コピー";
@@ -861,7 +899,7 @@ function showPage(page, template = null) {
     }
 
 }
-   
+
 /************************************************
  * メニュー操作
  ************************************************/
