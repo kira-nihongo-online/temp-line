@@ -336,6 +336,17 @@ footer {
     background: #f5f5f5;
 }
 
+/* コピー成功時の表示 */
+.copy-button {
+    background: #263746;
+    color: white;
+    border: 1px solid #263746;
+}
+
+.copy-button:hover {
+    background: #3b5266;
+}
+
 </style>
 </head>
 
@@ -767,7 +778,46 @@ function showList() {
             showList();
         });
 
-        actions.append(editButton, deleteButton);
+        
+        const jpCopyButton = document.createElement("button");
+        jpCopyButton.className = "template-action-button copy-button";
+        jpCopyButton.textContent = "日本語コピー";
+
+        jpCopyButton.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(template.japanese || "");
+                jpCopyButton.textContent = "コピー完了";
+                setTimeout(() => {
+                    jpCopyButton.textContent = "日本語コピー";
+                }, 1500);
+            } catch (error) {
+                alert("コピーできませんでした。");
+            }
+        });
+
+        const thCopyButton = document.createElement("button");
+        thCopyButton.className = "template-action-button copy-button";
+        thCopyButton.textContent = "タイ語コピー";
+
+        thCopyButton.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(template.thai || "");
+                thCopyButton.textContent = "コピー完了";
+                setTimeout(() => {
+                    thCopyButton.textContent = "タイ語コピー";
+                }, 1500);
+            } catch (error) {
+                alert("コピーできませんでした。");
+            }
+        });
+
+        actions.append(
+            jpCopyButton,
+            thCopyButton,
+            editButton,
+            deleteButton
+        );
+
 
         card.append(
             title,
