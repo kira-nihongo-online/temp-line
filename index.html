@@ -497,10 +497,13 @@ function showCategory() {
             <button
                 type="button"
                 class="form-button save-button"
+                id="addCategoryButton"
             >
                 登録
             </button>
         </div>
+
+        <p id="categoryStatus" class="form-status"></p>
 
         <h3>カテゴリー一覧</h3>
 
@@ -510,6 +513,34 @@ function showCategory() {
             </div>
         </div>
     `;
+
+    document.getElementById("addCategoryButton")
+        .addEventListener("click", () => {
+
+            const input = document.getElementById("newCategory");
+            const name = input.value.trim();
+            const status = document.getElementById("categoryStatus");
+            const categoryList = document.getElementById("categoryList");
+
+            if (!name) {
+                status.textContent = "カテゴリー名を入力してください。";
+                return;
+            }
+
+            const item = document.createElement("div");
+            item.className = "template-card";
+            item.textContent = name;
+
+            if (categoryList.querySelector(".empty")) {
+                categoryList.innerHTML = "";
+            }
+
+            categoryList.appendChild(item);
+
+            input.value = "";
+            status.textContent = "カテゴリーを追加しました。";
+
+        });
 
 }
 
